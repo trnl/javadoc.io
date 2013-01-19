@@ -23,17 +23,17 @@ import java.util.zip.ZipInputStream;
 public class Runner {
     public static void main(String[] args) throws URISyntaxException, IOException {
 
-        boolean debug = false;
+        boolean debug = true;
 
         JavaDocBuilder builder = new JavaDocBuilder();
         File output = new File("output");
-        output.delete();
-        output.mkdirs();
+//        output.delete();
+//        output.mkdirs();
 
-        URL url = new URL("http://search.maven.org/remotecontent?filepath=org/springframework/spring-aop/3.2.0.RELEASE/spring-aop-3.2.0.RELEASE-sources.jar");
+        URL url = new URL("http://search.maven.org/remotecontent?filepath=org/springframework/spring-core/3.2.0.RELEASE/spring-core-3.2.0.RELEASE-sources.jar");
         ZipInputStream zin = new ZipInputStream(url.openStream());
         ZipEntry ze;
-        while ((ze = zin.getNextEntry()) != null && debug) {
+        while ((ze = zin.getNextEntry()) != null && !debug) {
             try {
                 File f = new File(output, ze.getName());
 
@@ -64,12 +64,12 @@ public class Runner {
         builder.addSourceTree(output);
 
         DB db = new Mongo("localhost", 27017).getDB("javadoc");
-        db.dropDatabase();
+//        db.dropDatabase();
         DBCollection libsCollection = db.getCollection("libs");
 
         DBObject libObject = new BasicDBObject();
         libObject.put("_id", new ObjectId()); //TODO _id
-        libObject.put("vr", "0.1"); //TODO version
+        libObject.put("vr", "3.2.0.RELEASE"); //TODO version
         libObject.put("gr", "org.springframework"); //TODO group
         libObject.put("aid", "spring-core"); //TODO artifactId
 
